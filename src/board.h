@@ -16,4 +16,14 @@ namespace TFT {
 
 } //namespace TFT;
 
+namespace GNSS {
+
+    constexpr const int8_t VGNSS_CTRL = 3;
+    const int8_t RX = 34;
+    const int8_t TX = 33;
+    const int8_t RST = 35; //There is a function built for this in the example below- currently it isn't used
+    const int8_t PPS = 36;
+
+} //namespace GPS;
+
 } //namespace Pins;
