@@ -1,7 +1,7 @@
 include <BOSL2/std.scad>
 include <BOSL2/rounding.scad>
 
-//$fn = 96;
+$fn = 96;
 
 // corner definition
 //
@@ -15,7 +15,7 @@ delta=.15;
 length = 80;
 width = 40;
 top_height = 10;
-bottom_height = 16;
+bottom_height = 18;
 thickness = 3.2;
 overlap = 3;
 
@@ -39,18 +39,6 @@ battery_width = 34;
 battery_height = 10;
 
 antenna_diameter = 6.9;
-
-module button_slit(radius, length, size) {
-    linear_extrude(10) {
-        difference() {
-            circle(radius);
-            circle(radius - size);
-            square([2 * radius, radius], anchor=BACK);
-        }
-        left(radius) square([size, length], anchor=BACK+LEFT);
-        right(radius) square([size, length], anchor=BACK+RIGHT);
-    }
-}
 
 module top_shell() {
     difference() {
@@ -79,8 +67,8 @@ module case() {
 
             // Buttons
             fwd(tracker_length * 0.5 - 3) {
-                left(8) up(thickness) cylinder(h=3, r1=3, r2=2, anchor=BOTTOM);
-                right(8) up(thickness) cylinder(h=3, r1=3, r2=2, anchor=BOTTOM);
+                left(8) up(thickness) cylinder(h=2, r1=5, r2=2, anchor=BOTTOM);
+                right(8) up(thickness) cylinder(h=2, r1=5, r2=2, anchor=BOTTOM);
             }
 
             // PCB stands
@@ -114,11 +102,23 @@ module case() {
             right(6) cylinder(h=2*thickness, r=0.75);
         }
 
+        // Button holes
         down(0.5) fwd(tracker_length * 0.5 - 3) {
-            left(8) button_slit(3, 3, 0.5);
-            right(8) button_slit(3, 3, 0.5);
+            left(8) {
+                cylinder(r1=4, r2=1, h=3, anchor=BOTTOM);
+                cylinder(r=1.5, h=10, anchor=BOTTOM);
+            }
+            right(8) {
+                cylinder(r1=4, r2=1, h=3, anchor=BOTTOM);
+                cylinder(r=1.5, h=10, anchor=BOTTOM);
+            }
         }
     }
+}
+
+module button() {
+    cylinder(h=1.5, r=2, anchor=BOTTOM);
+    up(1.5) cylinder(h=3, r=1, anchor=BOTTOM);
 }
 
 module lid() {
@@ -175,3 +175,5 @@ module lid() {
 case();
 
 right(50) lid();
+left(30) button();
+left(40) button();
