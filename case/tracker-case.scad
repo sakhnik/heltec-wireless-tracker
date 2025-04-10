@@ -1,7 +1,7 @@
 include <BOSL2/std.scad>
 include <BOSL2/rounding.scad>
 
-$fn = 96;
+//$fn = 96;
 
 // corner definition
 //
@@ -12,11 +12,11 @@ rounding = 2;
 // snugness of the fit
 delta=.15;
 
-length= 67;
-width = 37;
+length = 80;
+width = 40;
 top_height = 10;
-bottom_height = 13;
-thickness = 2.2;
+bottom_height = 16;
+thickness = 3.2;
 overlap = 3;
 
 tracker_length = 63.64;
@@ -31,14 +31,14 @@ gnss_width = 20;
 gnss_height = 0.75;
 
 usb_hang = 2.2;
-usb_width = 9.5;
-usb_height = 3.9;
+usb_width = 9;
+usb_height = 3.5;
 usb_z = 2;
 battery_length = 50;
 battery_width = 34;
 battery_height = 10;
 
-antenna_diameter = 6.5;
+antenna_diameter = 6.9;
 
 module button_slit(radius, length, size) {
     linear_extrude(10) {
@@ -106,7 +106,7 @@ module case() {
             }
 
             // Screen platform
-            fwd(tracker_length * 0.5 - 10 + thickness) rect_tube(size1=[screen_width + 2*thickness, screen_length + 2*thickness], size2=[screen_width, screen_length], wall=thickness, h=3, anchor=BOTTOM+FRONT);
+            fwd(tracker_length * 0.5 - 10 + thickness) rect_tube(size1=[screen_width + 2*thickness, screen_length + 2*thickness], size2=[screen_width + thickness, screen_length + thickness], wall=thickness, h=4, anchor=BOTTOM+FRONT);
         }
 
         fwd(tracker_length * 0.5 - 8) {
@@ -148,7 +148,12 @@ module lid() {
                 }
             }
 
-            back(tracker_length * 0.5 - (tracker_length - battery_length)) up(rounding) {
+            back(battery_length - length * 0.5 + 10) up(rounding) {
+                left(width * 0.5) cuboid(size=[15,2,top_height - thickness - overlap], anchor=BOTTOM+FRONT+LEFT);
+                right(width * 0.5) cuboid(size=[15,2,top_height - thickness - overlap], anchor=BOTTOM+FRONT+RIGHT);
+            }
+
+            fwd(length * 0.5 - 10) up(rounding) {
                 left(width * 0.5) cuboid(size=[15,2,top_height - thickness - overlap], anchor=BOTTOM+FRONT+LEFT);
                 right(width * 0.5) cuboid(size=[15,2,top_height - thickness - overlap], anchor=BOTTOM+FRONT+RIGHT);
             }
