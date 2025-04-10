@@ -95,14 +95,14 @@ module case() {
 
             // front stands
             fwd(tracker_length * 0.5) up(rounding) {
-                left(10) cuboid(size=[5,1.5,5 + usb_height - rounding], anchor=BOTTOM+BACK);
-                right(10) cuboid(size=[5,1.5,5 + usb_height - rounding], anchor=BOTTOM+BACK);
+                left(10) cuboid(size=[5,2,5 + usb_height - rounding], anchor=BOTTOM+BACK);
+                right(10) cuboid(size=[5,2,5 + usb_height - rounding], anchor=BOTTOM+BACK);
             }
 
             // back stands
             back(tracker_length * 0.5) up(rounding) {
-                left(10) cuboid(size=[5,1.5,5 + usb_height - rounding], anchor=BOTTOM+FRONT);
-                right(10) cuboid(size=[5,1.5,5 + usb_height - rounding], anchor=BOTTOM+FRONT);
+                left(10) cuboid(size=[5,2,5 + usb_height - rounding], anchor=BOTTOM+FRONT);
+                right(10) cuboid(size=[5,2,5 + usb_height - rounding], anchor=BOTTOM+FRONT);
             }
 
             // Screen platform
@@ -148,14 +148,15 @@ module lid() {
                 }
             }
 
+            // Battery support
             back(battery_length - length * 0.5 + 10) up(rounding) {
-                left(width * 0.5) cuboid(size=[15,2,top_height - thickness - overlap], anchor=BOTTOM+FRONT+LEFT);
-                right(width * 0.5) cuboid(size=[15,2,top_height - thickness - overlap], anchor=BOTTOM+FRONT+RIGHT);
+                left(width * 0.5) cuboid(size=[15,3,bottom_height - thickness - overlap], anchor=BOTTOM+FRONT+LEFT);
+                right(width * 0.5) cuboid(size=[15,3,bottom_height - thickness - overlap], anchor=BOTTOM+FRONT+RIGHT);
             }
 
             fwd(length * 0.5 - 10) up(rounding) {
-                left(width * 0.5) cuboid(size=[15,2,top_height - thickness - overlap], anchor=BOTTOM+FRONT+LEFT);
-                right(width * 0.5) cuboid(size=[15,2,top_height - thickness - overlap], anchor=BOTTOM+FRONT+RIGHT);
+                left(width * 0.5) cuboid(size=[10,3,bottom_height - thickness - overlap], anchor=BOTTOM+FRONT+LEFT);
+                right(width * 0.5) cuboid(size=[10,3,bottom_height - thickness - overlap], anchor=BOTTOM+FRONT+RIGHT);
             }
 
             // Antenna support
