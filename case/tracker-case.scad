@@ -97,9 +97,10 @@ module case() {
             fwd(tracker_length * 0.5 - 10 + thickness) rect_tube(size1=[screen_width + 2*thickness, screen_length + 2*thickness], size2=[screen_width + thickness, screen_length + thickness], wall=thickness, h=4, anchor=BOTTOM+FRONT);
         }
 
+        // LED windows
         fwd(tracker_length * 0.5 - 8) {
-            left(6) cylinder(h=2*thickness, r=0.75);
-            right(6) cylinder(h=2*thickness, r=0.75);
+            left(6) cylinder(h=5*thickness, r=1.72, anchor=CENTER);
+            right(6) cylinder(h=5*thickness, r=1.72, anchor=CENTER);
         }
 
         // Button holes
