@@ -15,7 +15,7 @@ delta=.15;
 length = 80;
 width = 40;
 top_height = 10;
-bottom_height = 18;
+bottom_height = 19;
 thickness = 3.2;
 overlap = 3;
 
@@ -38,7 +38,7 @@ battery_length = 50;
 battery_width = 34;
 battery_height = 10;
 
-antenna_diameter = 6.9;
+antenna_diameter = 6.5;
 
 module top_shell() {
     difference() {
@@ -52,6 +52,8 @@ module usbc() {
     fwd(length/2) cuboid($fn=20,[usb_width, 20, usb_height], rounding=1.4, anchor=BOTTOM);
 }
 
+tracker_position_y = length * 0.5 - thickness;
+
 module case() {
     difference() {
         union() {
@@ -62,49 +64,45 @@ module case() {
                 up(thickness + usb_z) usbc();
 
                 // Screen window
-                fwd(tracker_length * 0.5 - 10 + thickness) down(0.01) prismoid(size1=[screen_width + 2*thickness, screen_length + 2*thickness], size2=[screen_width, screen_length], h=4, anchor=BOTTOM+FRONT);
+                fwd(tracker_position_y - 11 + thickness) down(0.01) prismoid(size1=[screen_width + 3*thickness, screen_length + 2*thickness], size2=[screen_width, screen_length], h=thickness+0.02, anchor=BOTTOM+FRONT);
             }
 
             // Buttons
-            fwd(tracker_length * 0.5 - 3) {
-                left(8) up(thickness) cylinder(h=2, r1=5, r2=2, anchor=BOTTOM);
-                right(8) up(thickness) cylinder(h=2, r1=5, r2=2, anchor=BOTTOM);
+            fwd(tracker_position_y - 3) {
+                left(8) up(thickness) cylinder(h=1, r1=5, r2=2, anchor=BOTTOM);
+                right(8) up(thickness) cylinder(h=1, r1=5, r2=2, anchor=BOTTOM);
             }
 
             // PCB stands
-            fwd(tracker_length * 0.37) {
+            fwd(tracker_position_y - tracker_length * 0.2) {
                 left(tracker_width * 0.5) cuboid(size=[2,10,4 + usb_height], anchor=BOTTOM+LEFT);
                 right(tracker_width * 0.5) cuboid(size=[2,10,4 + usb_height], anchor=BOTTOM+RIGHT);
             }
-            back(tracker_length * 0.37) {
-                left(tracker_width * 0.5) cuboid(size=[2,10,4 + usb_height], anchor=BOTTOM+LEFT);
-                right(tracker_width * 0.5) cuboid(size=[2,10,4 + usb_height], anchor=BOTTOM+RIGHT);
-            }
-
-            // front stands
-            fwd(tracker_length * 0.5) up(rounding) {
-                left(10) cuboid(size=[5,2,5 + usb_height - rounding], anchor=BOTTOM+BACK);
-                right(10) cuboid(size=[5,2,5 + usb_height - rounding], anchor=BOTTOM+BACK);
+            fwd(tracker_position_y - tracker_length * 0.77) {
+                left(tracker_width * 0.5 - 1.5) cuboid(size=[2,10,4 + usb_height], anchor=BOTTOM+LEFT);
+                right(tracker_width * 0.5 - 1.5) cuboid(size=[2,10,4 + usb_height], anchor=BOTTOM+RIGHT);
             }
 
             // back stands
-            back(tracker_length * 0.5) up(rounding) {
+            fwd(tracker_position_y - tracker_length) up(rounding) {
                 left(10) cuboid(size=[5,2,5 + usb_height - rounding], anchor=BOTTOM+FRONT);
                 right(10) cuboid(size=[5,2,5 + usb_height - rounding], anchor=BOTTOM+FRONT);
             }
 
-            // Screen platform
-            fwd(tracker_length * 0.5 - 10 + thickness) rect_tube(size1=[screen_width + 2*thickness, screen_length + 2*thickness], size2=[screen_width + thickness, screen_length + thickness], wall=thickness, h=4, anchor=BOTTOM+FRONT);
+            // front stand
+            fwd(tracker_position_y - 8) {
+                up(thickness) cuboid(size=[5,2,4 + usb_height - thickness], anchor=BOTTOM+FRONT);
+            }
         }
 
         // LED windows
-        fwd(tracker_length * 0.5 - 8) {
+        fwd(tracker_position_y - 8) {
             left(6) cylinder(h=5*thickness, r=1.72, anchor=CENTER);
             right(6) cylinder(h=5*thickness, r=1.72, anchor=CENTER);
         }
 
         // Button holes
-        down(0.5) fwd(tracker_length * 0.5 - 3) {
+        down(0.5) fwd(tracker_position_y - 3) {
             left(8) {
                 cylinder(r1=4, r2=1, h=3, anchor=BOTTOM);
                 cylinder(r=1.5, h=10, anchor=BOTTOM);
@@ -119,7 +117,7 @@ module case() {
 
 module button() {
     cylinder(h=1.5, r=2, anchor=BOTTOM);
-    up(1.5) cylinder(h=3, r=1, anchor=BOTTOM);
+    up(1.5) cylinder(h=5, r=1.2, anchor=BOTTOM);
 }
 
 module lid() {
@@ -136,12 +134,6 @@ module lid() {
                 // A hole for USB
                 up(bottom_height - (top_height - thickness - usb_height - usb_z)) usbc();
 
-                // A hole for the front stands
-                fwd(tracker_length * 0.5) up(bottom_height - (overlap - 1)) {
-                    left(10) cuboid(size=[5,10,10], anchor=BOTTOM);
-                    right(10) cuboid(size=[5,10,10], anchor=BOTTOM);
-                }
-
                 // A hole for the back stands
                 back(tracker_length * 0.5) up(bottom_height - (overlap - 1)) {
                     left(10) cuboid(size=[5,10,10], anchor=BOTTOM);
@@ -156,15 +148,15 @@ module lid() {
             }
 
             fwd(length * 0.5 - 10) up(rounding) {
-                left(width * 0.5) cuboid(size=[10,3,bottom_height - thickness - overlap], anchor=BOTTOM+FRONT+LEFT);
-                right(width * 0.5) cuboid(size=[10,3,bottom_height - thickness - overlap], anchor=BOTTOM+FRONT+RIGHT);
+                left(width * 0.5) cuboid(size=[10,3,bottom_height - thickness - overlap], anchor=BOTTOM+BACK+LEFT);
+                right(width * 0.5) cuboid(size=[10,3,bottom_height - thickness - overlap], anchor=BOTTOM+BACK+RIGHT);
             }
 
             // Antenna support
             bulge_thickness = 1;
-            back(length*0.5 - bulge_thickness) hull() {
-                up(bottom_height/2) xrot(90) cylinder(h=bulge_thickness, r=antenna_diameter/2 + 1);
-                up(thickness) cuboid(size=[antenna_diameter + 2, 1, 3], anchor=BOTTOM+BACK);
+            back(length*0.5 - thickness + bulge_thickness) hull() {
+                up(bottom_height/2) xrot(90) cylinder(h=bulge_thickness, r=antenna_diameter/2 + 2);
+                up(thickness) cuboid(size=[antenna_diameter + 4, bulge_thickness, 3], anchor=BOTTOM+BACK);
             }
         }
 
