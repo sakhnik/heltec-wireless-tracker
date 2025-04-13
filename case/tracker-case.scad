@@ -101,6 +101,9 @@ module case() {
                 right(8) up(thickness) cylinder(h=1, r1=5, r2=2, anchor=BOTTOM);
             }
 
+            // Screen seal
+            fwd(tracker_position_y - 10) up(thickness) rect_tube(size=[screen_width + 2, screen_length + 2], wall=1, h=1, anchor=BOTTOM+FRONT);
+
             // PCB stands
             fwd(tracker_position_y - tracker_length * 0.2) {
                 left(tracker_width * 0.5) cuboid(size=[2,10,4 + usb_height], anchor=BOTTOM+LEFT);
