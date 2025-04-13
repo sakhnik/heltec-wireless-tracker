@@ -22,7 +22,7 @@ overlap = 3;
 tracker_length = 63.64;
 tracker_width = 28;
 tracker_height = 8.62;
-wifi_antenna_height = 1.1;
+wifi_antenna_height = 1.5;
 
 screen_width = 12;
 screen_length = 23;
@@ -41,10 +41,35 @@ battery_height = 10;
 antenna_diameter = 6.5;
 
 module top_shell() {
-    difference() {
-        cuboid(size=[width, length, top_height], anchor=BOTTOM, rounding=rounding, edges=[BOTTOM, FRONT+LEFT, FRONT+RIGHT, BACK+LEFT, BACK+RIGHT]);
-        up(thickness) cuboid([width-thickness,length-thickness,top_height], anchor=BOTTOM, rounding=rounding, edges=[BOTTOM, FRONT+LEFT, FRONT+RIGHT, BACK+LEFT, BACK+RIGHT]);
-        up(top_height - overlap) cuboid([width-thickness*0.5,length-thickness*0.5,top_height], anchor=BOTTOM, rounding=rounding, edges=[FRONT+LEFT, FRONT+RIGHT, BACK+LEFT, BACK+RIGHT]);
+    union() {
+        difference() {
+            cuboid(size=[width, length, top_height], anchor=BOTTOM, rounding=rounding, edges=[BOTTOM, FRONT+LEFT, FRONT+RIGHT, BACK+LEFT, BACK+RIGHT]);
+            up(thickness) cuboid([width-thickness,length-thickness,top_height], anchor=BOTTOM, rounding=rounding, edges=[BOTTOM, FRONT+LEFT, FRONT+RIGHT, BACK+LEFT, BACK+RIGHT]);
+            up(top_height - overlap) cuboid([width-thickness*0.5,length-thickness*0.5,top_height], anchor=BOTTOM, rounding=rounding, edges=[FRONT+LEFT, FRONT+RIGHT, BACK+LEFT, BACK+RIGHT]);
+        }
+
+        // Use glue instead of locks!
+        // lock size
+        //lock = 1;
+
+        //up(top_height - overlap * 0.25) {
+        //    for (i = [-1:1]) {
+        //        for (j = [-1:2:1]) {
+        //            left(j * (0.5 * width - 0.25 * thickness))
+        //            fwd(i * length * 0.25)
+        //                prismoid(size1=[lock,5], size2=[0, 5], h=overlap * 0.5, anchor=TOP);
+        //        }
+        //    }
+
+        //    fwd(0.5 * length - 0.25 * thickness) {
+        //        left(0.25 * width) prismoid(size1=[5,lock], size2=[5, 0], h=overlap * 0.5, anchor=TOP);
+        //        right(0.25 * width) prismoid(size1=[5,lock], size2=[5, 0], h=overlap * 0.5, anchor=TOP);
+        //    }
+        //    back(0.5 * length - 0.25 * thickness) {
+        //        left(0.25 * width) prismoid(size1=[5,lock], size2=[5, 0], h=overlap * 0.5, anchor=TOP);
+        //        right(0.25 * width) prismoid(size1=[5,lock], size2=[5, 0], h=overlap * 0.5, anchor=TOP);
+        //    }
+        //}
     }
 }
 
@@ -65,6 +90,9 @@ module case() {
 
                 // Screen window
                 fwd(tracker_position_y - 11 + thickness) down(0.01) prismoid(size1=[screen_width + 3*thickness, screen_length + 2*thickness], size2=[screen_width, screen_length], h=thickness+0.02, anchor=BOTTOM+FRONT);
+
+                // WiFi antenna hole
+                up(thickness) fwd(tracker_position_y - 21.0) right(tracker_width * 0.5 - 3) cylinder(h=2*wifi_antenna_height, r=2, anchor=CENTER);
             }
 
             // Buttons
@@ -117,7 +145,7 @@ module case() {
 
 module button() {
     cylinder(h=1.5, r=2, anchor=BOTTOM);
-    up(1.5) cylinder(h=5, r=1.2, anchor=BOTTOM);
+    up(1.5) cylinder(h=4.5, r=1.2, anchor=BOTTOM);
 }
 
 module lid() {
@@ -143,25 +171,47 @@ module lid() {
 
             // Battery support
             back(battery_length - length * 0.5 + 10) up(rounding) {
-                left(width * 0.5) cuboid(size=[15,3,bottom_height - thickness - overlap], anchor=BOTTOM+FRONT+LEFT);
-                right(width * 0.5) cuboid(size=[15,3,bottom_height - thickness - overlap], anchor=BOTTOM+FRONT+RIGHT);
+                left(width * 0.5) cuboid(size=[9,3,1 + bottom_height - thickness - overlap], anchor=BOTTOM+FRONT+LEFT);
+                right(width * 0.5) cuboid(size=[9,3,1 + bottom_height - thickness - overlap], anchor=BOTTOM+FRONT+RIGHT);
             }
 
             fwd(length * 0.5 - 10) up(rounding) {
-                left(width * 0.5) cuboid(size=[10,3,bottom_height - thickness - overlap], anchor=BOTTOM+BACK+LEFT);
-                right(width * 0.5) cuboid(size=[10,3,bottom_height - thickness - overlap], anchor=BOTTOM+BACK+RIGHT);
+                left(width * 0.5) cuboid(size=[9,3,1 + bottom_height - thickness - overlap], anchor=BOTTOM+BACK+LEFT);
+                right(width * 0.5) cuboid(size=[9,3,1 + bottom_height - thickness - overlap], anchor=BOTTOM+BACK+RIGHT);
             }
 
             // Antenna support
             bulge_thickness = 1;
-            back(length*0.5 - thickness + bulge_thickness) hull() {
+            back(length*0.5 - bulge_thickness) hull() {
                 up(bottom_height/2) xrot(90) cylinder(h=bulge_thickness, r=antenna_diameter/2 + 2);
                 up(thickness) cuboid(size=[antenna_diameter + 4, bulge_thickness, 3], anchor=BOTTOM+BACK);
             }
+
+            // Strap support
+            up(0.5*rounding) back(0.5 * length - 0.5*rounding) {
+                right(0.5 * width - 0.5*rounding)
+                cuboid([12,12,10], rounding=rounding, anchor=BACK+BOTTOM+RIGHT);
+                left(0.5 * width - 0.5*rounding)
+                cuboid([12,12,10], rounding=rounding, anchor=BACK+BOTTOM+LEFT);
+            }
+
         }
 
         // Antenna
         up(bottom_height/2) back(length*0.5 + 10) xrot(90) cylinder(h=20, r=antenna_diameter/2);
+
+        // Strap holes
+        up(7) back(0.5 * length) {
+            right(0.5 * width)
+            rotate_extrude(convexity = 10)
+                translate([-8, 0, 0])
+                    circle(r = 2.5);
+
+            left(0.5 * width)
+            rotate_extrude(convexity = 10)
+                translate([8, 0, 0])
+                    circle(r = 2.5);
+        }
     }
 }
 
