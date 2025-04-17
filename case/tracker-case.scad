@@ -25,7 +25,7 @@ tracker_height = 8.62;
 wifi_antenna_height = 1.5;
 
 screen_width = 12;
-screen_length = 23;
+screen_length = 24;
 
 gnss_width = 20;
 gnss_height = 0.75;
